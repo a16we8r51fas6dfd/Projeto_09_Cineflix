@@ -1,0 +1,54 @@
+header {
+    width: 375px;
+    height: 67px;
+
+    background-color: #C3CFD9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 34px;
+    line-height: 40px;
+    font-weight: normal;
+    color: #e8833a;
+}
+
+.mensagem-topo {
+    width: 375px;
+    height: 110px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: normal;
+    color: #293845;
+}
+
+.filmes {
+    width: 375px;
+    height: 700px;
+    
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 30px;
+    row-gap: 11px;
+    
+    padding-top: 5px;
+    padding-left: 30px;
+    padding-bottom: 5px;
+
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.filme {
+    width: 145px;
+    height: 209px;
+
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
