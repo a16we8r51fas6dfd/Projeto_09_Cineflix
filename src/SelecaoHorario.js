@@ -1,6 +1,27 @@
+import { useState, useEffect} from 'react'
+import { Link, useParams} from 'react-router-dom'
+import axios from 'axios'
+
 import './SelecaoHorario.css'
 
 export default function SelecaoFilme() {
+    const [sessoes, setSessoes] = useState(null)
+    const { id } = useParams()
+
+    useEffect(() => {
+        const requisicao = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/movies/${id}/showtimes`)
+
+        requisicao.then(resposta => {
+            setSessoes(resposta.data.days)
+        })
+    }, [])
+
+    if(sessoes === null) {
+        return(
+            <h1>carregando mais ainda, muito carregamento mesmos</h1>
+        )
+    }
+
     return(
         <>
             <header>
@@ -11,24 +32,14 @@ export default function SelecaoFilme() {
                 <h2>Selecione o horário</h2>
             </div>
 
-            <div className="sessao">
-                <p>quinta-feira - 24/06/2021</p>
-                <button>15:00</button>
-                <button>19:00</button>
-            </div>
-
-            <div className="sessao">
-                <p>quinta-feira - 24/06/2021</p>
-                <button>15:00</button>
-                <button>19:00</button>
-            </div>
-
-            <div className="filme-selecionado">
-                <div className='filme-selecionado-miniatura'>
-
+            {sessoes.map((sessao) => 
+                <div className="sessao">
+                    <p>{sessao.weekday} - {sessao.date}</p>
+                    {sessao.showtimes.map((horario) => 
+                        <button>{horario.name}</button>
+                    )}
                 </div>
-                <p>Enola Holmes</p>
-            </div>
+            )}
         </>
     )
 }
