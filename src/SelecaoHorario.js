@@ -35,8 +35,10 @@ export default function SelecaoFilme() {
             {sessoes.map((sessao) => 
                 <div className="sessao">
                     <p>{sessao.weekday} - {sessao.date}</p>
-                    {sessao.showtimes.map((horario) => 
-                        <button>{horario.name}</button>
+                    {sessao.showtimes.map((horario) =>
+                        <Link to={`/assentos/${horario.id}`}>
+                            <button>{horario.name}</button>
+                        </Link>
                     )}
                 </div>
             )}

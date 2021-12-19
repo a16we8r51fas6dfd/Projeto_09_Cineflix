@@ -4,8 +4,8 @@ import "./css/reset.css"
 import "./css/style.css"
 import SelecaoFilme from './SelecaoFilme'
 import SelecaoHorario from './SelecaoHorario'
-/* import SelecaoAssentos from './SelecaoAssentos'
-import Sucesso from './Sucesso' */
+import SelecaoAssentos from './SelecaoAssentos'
+import Sucesso from './Sucesso'
 
 function App() {
 
@@ -14,6 +14,7 @@ function App() {
             <Routes>
                 <Route exact path='/' element={<SelecaoFilme />} />
                 <Route path='/sessoes/:id' element={<SelecaoHorario />} />
+                <Route path='/assentos/:id' element={<SelecaoAssentos />} />
             </Routes>
         </BrowserRouter>
     )
