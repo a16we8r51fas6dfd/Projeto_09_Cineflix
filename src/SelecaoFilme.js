@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 import './SelecaoFilme.css'
@@ -32,9 +33,9 @@ export default function SelecaoFilme() {
 
             <div className='filmes'>
                 {filmes.map((filme) => 
-                    <div className="filme">
-                        <img src={filme.posterURL} alt="img" />
-                    </div>
+                    <Link to={`sessoes/${filme.id}`} className="filme">
+                        <img onClick={() => console.log(filme.id)} src={filme.posterURL} alt={filme.title} />
+                    </Link>
                 )}
             </div>
         </>
