@@ -1,7 +1,8 @@
 import './Sucesso.css'
 
 export default function Sucesso({dados, setDados}) {
-    const cpf = dados.data.cpf
+    const cpf = dados.data.cpf.split('')
+    const cpfString = `${cpf[0]}${cpf[1]}${cpf[2]}.${cpf[3]}${cpf[4]}${cpf[5]}.${cpf[6]}${cpf[7]}${cpf[8]} - ${cpf[9]}${cpf[10]}`
 
     return (
         <>
@@ -29,11 +30,11 @@ export default function Sucesso({dados, setDados}) {
             <div className="mensagem-info">
                 <strong>Comprador</strong>
                 <p>Nome: {dados.data.nome}</p>
-                <p>CPF: {dados.data.cpf}</p>
+                <p>CPF: {cpfString}</p>
             </div>
 
             <div className="voltar-home">
-                <button onClick={() => console.log(dados)}>Voltar para Home</button>
+                <button onClick={() => console.log(dados, cpf, cpfString)}>Voltar para Home</button>
             </div>
         </>
     )

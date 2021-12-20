@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import './SelecaoHorario.css'
 
-export default function SelecaoFilme() {
+export default function SelecaoFilme({dados, setDados}) {
     const [sessoes, setSessoes] = useState(null)
     const { id } = useParams()
 
@@ -14,12 +14,19 @@ export default function SelecaoFilme() {
         requisicao.then(resposta => {
             setSessoes(resposta.data.days)
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if(sessoes === null) {
         return(
             <h1>carregando mais ainda, muito carregamento mesmos</h1>
         )
+    }
+
+    function handleDados(diaSemana, dia, horario) {
+        const dadosObjeto = {...dados, diaSemana: diaSemana, dia: dia, horario: horario}
+
+        setDados(dadosObjeto)
     }
 
     return(
@@ -33,15 +40,20 @@ export default function SelecaoFilme() {
             </div>
 
             {sessoes.map((sessao) => 
-                <div className="sessao">
+                <div key={sessao.id} className="sessao">
                     <p>{sessao.weekday} - {sessao.date}</p>
                     {sessao.showtimes.map((horario) =>
-                        <Link to={`/assentos/${horario.id}`}>
-                            <button>{horario.name}</button>
+                        <Link key={horario.id} to={`/assentos/${horario.id}`}>
+                            <button onClick={() => handleDados(sessao.weekday, sessao.date, horario.name)}>{horario.name}</button>
                         </Link>
                     )}
                 </div>
             )}
+
+            <div className="filme-selecionado">
+                <div className='filme-selecionado-miniatura'><img src={dados.poster} alt={dados.titulo} /></div>
+                <p>{dados.titulo}</p>
+            </div>
         </>
     )
 }

@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
-import { /* Link, */ useParams } from 'react-router-dom'
+import { /* Link, */ useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
 import './SelecaoAssentos.css'
 
-export default function SelecaoAssentos() {
+export default function SelecaoAssentos({ dados, setDados }) {
     const [assentos, setAssentos] = useState(null)
     const [assentosSelecionados, setAssentosSelecionados] = useState([])
     const { id } = useParams()
+    const [comprador, setComprador] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [assentoNome, setAssentoNome] = useState([])
+    let navigate = useNavigate()
 
     useEffect(() => {
         const requisicao = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/showtimes/${id}/seats`)
@@ -15,6 +19,7 @@ export default function SelecaoAssentos() {
         requisicao.then(resposta => {
             setAssentos(resposta.data.seats)
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (assentos === null) {
@@ -35,6 +40,8 @@ export default function SelecaoAssentos() {
     }
 
     function selecionarAssento(assento) {
+        setAssentoNome([...assentoNome, assento.name])
+
         if (assento.isAvailable === true && assentosSelecionados.includes(assento.id) === false) {
             setAssentosSelecionados([...assentosSelecionados, assento.id])
             console.log(assentosSelecionados)
@@ -44,6 +51,21 @@ export default function SelecaoAssentos() {
         } else if (assento.isAvailable === false) {
             alert('Esse assento não está disponível')
         }
+    }
+
+    function enviarDados(cpf, comprador, assentosSelecionados, assentoNome) {
+        let data = {
+            ids: assentosSelecionados,
+            nome: comprador,
+            cpf: cpf
+        }
+
+        setDados({...dados, data, numeroAssento: assentoNome})
+            
+        const post = axios.post("https://mock-api.driven.com.br/api/v4/cineflex/seats/book-many", data)
+
+        post.then(() => navigate('/sucesso'))
+        post.catch(() => console.log(data, dados))
     }
 
     return(
@@ -58,7 +80,7 @@ export default function SelecaoAssentos() {
 
             <div className="assentos">                
                 {assentos.map(assento =>        
-                    <div onClick={() => selecionarAssento(assento)} className={`assento ${condicaoAssento(assento)}`}>
+                    <div key={assento.id} onClick={() => selecionarAssento(assento)} className={`assento ${condicaoAssento(assento)}`}>
                         {assento.name}
                     </div>
                 )}
@@ -81,21 +103,21 @@ export default function SelecaoAssentos() {
 
             <div className="input-titulo">
                 <p>Nome do comprador:</p>
-                <input type="text" placeholder='Digite seu nome...'/>
+                <input type="text" placeholder='Digite seu nome...' value={comprador} onChange={event => setComprador(event.target.value)}/>
             </div>
 
             <div className="input-titulo">
                 <p>CPF do comprador:</p>
-                <input type="text" placeholder='Digite seu CPF...'/>
+                <input type="text" placeholder='Digite seu CPF...' value={cpf} onChange={event => setCpf(event.target.value)}/>
             </div>
 
             <div className="reservar">
-                <button>Reservar assento(s)</button>
+                <button onClick={() => enviarDados(cpf, comprador, assentosSelecionados, assentoNome)}>Reservar assento(s)</button>
             </div>
 
             <div className="filme-selecionado">
-                <div className='filme-selecionado-miniatura'></div>
-                <p>Enola Holmes</p>
+                <div className='filme-selecionado-miniatura'><img src={dados.poster} alt={dados.titulo} /></div>
+                <p>{dados.titulo} <br />{dados.diaSemana} {dados.horario}</p>
             </div>
         </>
     )

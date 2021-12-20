@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import './SelecaoFilme.css'
 
-export default function SelecaoFilme() {
+export default function SelecaoFilme({setDados}) {
     const [filmes, setFilmes] = useState(null)
     
     useEffect(() => {
@@ -21,6 +21,12 @@ export default function SelecaoFilme() {
         )
     }
 
+    function handleDados(filme, poster) {
+        const dadosObjeto = {titulo: filme, poster: poster}
+
+        setDados(dadosObjeto)
+    }
+
     return(
         <>
             <header>
@@ -33,8 +39,8 @@ export default function SelecaoFilme() {
 
             <div className='filmes'>
                 {filmes.map((filme) => 
-                    <Link to={`sessoes/${filme.id}`} className="filme">
-                        <img onClick={() => console.log(filme.id)} src={filme.posterURL} alt={filme.title} />
+                    <Link onClick={() => handleDados(filme.title, filme.posterURL)} key={filme.id} to={`sessoes/${filme.id}`} className="filme">
+                        <img  src={filme.posterURL} alt={filme.title} />
                     </Link>
                 )}
             </div>
