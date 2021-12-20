@@ -1,6 +1,51 @@
+import { useState, useEffect } from 'react'
+import { /* Link, */ useParams } from 'react-router-dom'
+import axios from 'axios'
+
 import './SelecaoAssentos.css'
 
 export default function SelecaoAssentos() {
+    const [assentos, setAssentos] = useState(null)
+    const [assentosSelecionados, setAssentosSelecionados] = useState([])
+    const { id } = useParams()
+
+    useEffect(() => {
+        const requisicao = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/showtimes/${id}/seats`)
+
+        requisicao.then(resposta => {
+            setAssentos(resposta.data.seats)
+        })
+    }, [])
+
+    if (assentos === null) {
+        return <h1>carregando mais ainda meu deus do ceu so carrega</h1>
+    }
+
+    function condicaoAssento(assento) {
+        
+        if (assentosSelecionados.includes(assento.id)) {
+            return 'selecionado'
+        } else if(assento.isAvailable === true) {
+            return 'disponivel'
+        } else if (assento.isAvailable === false) {
+            return 'indisponivel'
+        } else {
+            return
+        }
+    }
+
+    function selecionarAssento(assento) {
+        if (assento.isAvailable === true && assentosSelecionados.includes(assento.id) === false) {
+            setAssentosSelecionados([...assentosSelecionados, assento.id])
+            console.log(assentosSelecionados)
+        } else if (assentosSelecionados.includes(assento.id)) {
+            const novosAssentos = assentosSelecionados.filter(assentinho => assentinho !== assento.id)
+            setAssentosSelecionados(novosAssentos)
+        } else if (assento.isAvailable === false) {
+            alert('Esse assento não está disponível')
+        }
+    }
+
     return(
         <>
             <header>
@@ -11,67 +56,12 @@ export default function SelecaoAssentos() {
                 <h2>Selecione o(s) assento(s)</h2>
             </div>
 
-            <div className="assentos">
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
-                <div className="assento">
-                    01
-                </div>
+            <div className="assentos">                
+                {assentos.map(assento =>        
+                    <div onClick={() => selecionarAssento(assento)} className={`assento ${condicaoAssento(assento)}`}>
+                        {assento.name}
+                    </div>
+                )}
             </div>
 
             <div className="legenda-assentos">
