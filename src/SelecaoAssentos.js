@@ -11,7 +11,7 @@ export default function SelecaoAssentos({ dados, setDados }) {
     const [comprador, setComprador] = useState('')
     const [cpf, setCpf] = useState('')
     const [assentoNome, setAssentoNome] = useState([])
-    let navigate = useNavigate()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const requisicao = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/showtimes/${id}/seats`)
@@ -40,14 +40,15 @@ export default function SelecaoAssentos({ dados, setDados }) {
     }
 
     function selecionarAssento(assento) {
-        setAssentoNome([...assentoNome, assento.name])
-
         if (assento.isAvailable === true && assentosSelecionados.includes(assento.id) === false) {
             setAssentosSelecionados([...assentosSelecionados, assento.id])
+            setAssentoNome([...assentoNome, assento.name])
             console.log(assentosSelecionados)
         } else if (assentosSelecionados.includes(assento.id)) {
             const novosAssentos = assentosSelecionados.filter(assentinho => assentinho !== assento.id)
             setAssentosSelecionados(novosAssentos)
+            const novosNomes = assentoNome.filter(assentinho => assentinho != assento.name)
+            setAssentoNome(novosNomes)
         } else if (assento.isAvailable === false) {
             alert('Esse assento não está disponível')
         }
