@@ -1,6 +1,8 @@
 import './Sucesso.css'
 
-export default function Sucesso() {
+export default function Sucesso({dados, setDados}) {
+    const cpf = dados.data.cpf
+
     return (
         <>
             <header>
@@ -13,24 +15,25 @@ export default function Sucesso() {
 
             <div className="mensagem-info">
                 <strong>Filme e sessão</strong>
-                <p>Enola Holmes</p>
-                <p>24/06/2021 15:00</p>
+                <p>{dados.titulo}</p>
+                <p>{dados.dia} {dados.horario}</p>
             </div>
 
             <div className="mensagem-info">
                 <strong>Ingressos</strong>
-                <p>Assento 15</p>
-                <p>Assento 16</p>
+                {dados.numeroAssento.map(assento => 
+                    <p key={assento} >Assento {assento}</p>    
+                )}
             </div>
 
             <div className="mensagem-info">
                 <strong>Comprador</strong>
-                <p>Nome: João da Silva Sauro</p>
-                <p>CPF: 999.999.999-09</p>
+                <p>Nome: {dados.data.nome}</p>
+                <p>CPF: {dados.data.cpf}</p>
             </div>
 
             <div className="voltar-home">
-                <button>Voltar para Home</button>
+                <button onClick={() => console.log(dados)}>Voltar para Home</button>
             </div>
         </>
     )
